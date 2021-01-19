@@ -1,3 +1,3 @@
 export var routes = [
-    {name: 'testing', method: 'GET', url: '/testing', callback: 'WebController@index'},
+    {name: 'index', method: 'GET', url: '/', callback: 'WebController@index'},
 ];
