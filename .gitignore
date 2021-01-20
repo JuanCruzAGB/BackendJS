@@ -3,6 +3,4 @@
 
 # custom local files
 /config
-/app/Http
-/app/Models
 routes.js
