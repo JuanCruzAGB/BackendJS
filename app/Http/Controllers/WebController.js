@@ -1,6 +1,5 @@
 // ? Local
 import { Controller } from "../../Core/Http/Controllers/Controller.js";
-import { User } from "../../Models/User.js";
 
 /**
  * * WebController manage the general website backend.
