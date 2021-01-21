@@ -1,4 +1,5 @@
-// ? Local
+// ? BackendJS
+import { Class } from './Class.js';
 import { Config } from './Config.js';
 import { Connection } from './Database/MongoDB/Connection.js';
 import { Controller } from './Http/Controllers/Controller.js';
@@ -12,9 +13,10 @@ import bodyParser from 'body-parser';
  * * App manage the server app.
  * @export
  * @class App
+ * @extends {Class}
  * @author Juan Cruz Armentia <juancarmentia@gmail.com>
  */
-export class App {
+export class App extends Class {
     /**
      * * Creates an instance of App.
      * @param {object} [properties] App properties:
@@ -26,123 +28,12 @@ export class App {
     }, states = {
         //
     }) {
-        this.setProperties(properties);
-        this.setStates(states);
+        super(properties, states);
         this.setConfig();
         this.install();
         this.setControllers();
         this.setRoutes();
         this.setDatabase();
-    }
-
-    /**
-     * * Set the App properties.
-     * @param {object} [properties] App properties:
-     * @memberof App
-     */
-    setProperties (properties = {
-        //
-    }) {
-        this.properties = {};
-    }
-
-    /**
-     * * Returns the App properties or an specific property.
-     * @param {string} [name=''] Property name.
-     * @returns {Object|*}
-     * @memberof App
-     */
-    getProperties (name = '') {
-        if (name && name != '') {
-            return this.properties[name];
-        } else {
-            return this.properties;
-        }
-    }
-
-    /**
-     * * Check if there is a property.
-     * @param {string} name Property name.
-     * @returns {Boolean}
-     * @memberof App
-     */
-    hasProperty (name) {
-        if (this.properties.hasOwnProperty(name)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * * Change a property value.
-     * @param {string} name Property name.
-     * @param {*} value Property value.
-     * @memberof App
-     */
-    changeProperty (name, value) {
-        if (this.hasProperty(name)) {
-            this.properties[name] = value;
-        }
-        switch (name) {
-            default:
-                break;
-        }
-    }
-    
-    /**
-     * * Set the App states.
-     * @param {object} [states] App states:
-     * @memberof App
-     */
-    setStates (states = {
-        //
-    }) {
-        this.states = {};
-    }
-
-    /**
-     * * Returns the App states or an specific states.
-     * @param {string} [name=''] States name.
-     * @returns {Object|*}
-     * @memberof App
-     */
-    getStates (name = '') {
-        if (name && name != '') {
-            return this.states[name];
-        } else {
-            return this.states;
-        }
-    }
-
-    /**
-     * * Check if there is a status.
-     * @param {string} name Status name.
-     * @returns {Boolean}
-     * @memberof App
-     */
-    hasStates (name) {
-        if (this.states.hasOwnProperty(name)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * * Change a status value.
-     * @param {string} name Status name.
-     * @param {*} value Status value.
-     * @memberof App
-     */
-    changeStatus (name, value) {
-        if (this.hasStates(name)) {
-            this.states[name] = value;
-        }
-        switch (name) {
-            default:
-                break;
-        }
     }
 
     /**

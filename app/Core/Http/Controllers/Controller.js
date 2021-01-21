@@ -1,13 +1,15 @@
-// ? Local
+// ? BackendJS
+import { Class } from "../../Class.js";
 import { Autoload } from "./autoload.js";
 
 /**
  * * Controller manage the server controllers.
  * @export
  * @class Controller
+ * @extends {Class}
  * @author Juan Cruz Armentia <juancarmentia@gmail.com>
  */
-export class Controller {
+export class Controller extends Class {
     /**
      * * Creates an instance of Controller.
      * @param {object} [properties] Controller properties:
@@ -21,133 +23,8 @@ export class Controller {
     }, states = {
         //
     }, classObject = null) {
-        this.setProperties(properties);
-        this.setStates(states);
+        super(properties, states);
         this.setClass(classObject);
-    }
-
-    /**
-     * * Set the Controller properties.
-     * @param {object} [properties] Controller properties:
-     * @param {string} [properties.name] Controller name.
-     * @memberof Controller
-     */
-    setProperties (properties = {
-        name: null,
-    }) {
-        this.properties = {};
-        this.setNameProperty(properties);
-    }
-
-    /**
-     * * Returns the Controller properties or an specific property.
-     * @param {string} [name=''] Property name.
-     * @returns {Object|*}
-     * @memberof Controller
-     */
-    getProperties (name = '') {
-        if (name && name != '') {
-            return this.properties[name];
-        } else {
-            return this.properties;
-        }
-    }
-
-    /**
-     * * Check if there is a property.
-     * @param {string} name Property name.
-     * @returns {Boolean}
-     * @memberof Controller
-     */
-    hasProperty (name) {
-        if (this.properties.hasOwnProperty(name)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * * Change a property value.
-     * @param {string} name Property name.
-     * @param {*} value Property value.
-     * @memberof Controller
-     */
-    changeProperty (name , value) {
-        if (this.hasProperty(name)) {
-            this.properties[name] = value;
-        }
-        switch (name) {
-            default:
-                break;
-        }
-    }
-
-    /**
-     * * Set the Controller name.
-     * @param {object} [properties] Controller properties:
-     * @param {string} [properties.name] Controller name.
-     * @memberof Controller
-     */
-    setNameProperty (properties = {
-        name: null,
-    }) {
-        this.properties.name = ((properties.hasOwnProperty('name')) ? properties.name : null);
-    }
-    
-    /**
-     * * Set the Controller states.
-     * @param {object} [states] Controller states:
-     * @memberof Controller
-     */
-    setStates (states = {
-        //
-    }) {
-        this.states = {};
-    }
-
-    /**
-     * * Returns the Controller states or an specific states.
-     * @param {string} [name=''] States name.
-     * @returns {Object|*}
-     * @memberof Controller
-     */
-    getStates (name = '') {
-        if (name && name != '') {
-            return this.states[name];
-        } else {
-            return this.states;
-        }
-    }
-
-    /**
-     * * Check if there is a status.
-     * @param {string} name Status name.
-     * @returns {Boolean}
-     * @memberof Controller
-     */
-    hasStates (name) {
-        if (this.states.hasOwnProperty(name)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * * Change a status value.
-     * @param {string} name Status name.
-     * @param {*} value Status value.
-     * @memberof Controller
-     */
-    changeStatus (name, value) {
-        if (this.hasStates(name)) {
-            this.states[name] = value;
-        }
-        switch (name) {
-            default:
-                break;
-        }
     }
 
     /**

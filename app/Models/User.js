@@ -1,4 +1,4 @@
-// ? Local
+// ? BackendJS
 import { Model } from "../Core/Database/Models/Model.js";
 
 /**

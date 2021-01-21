@@ -1,36 +1,29 @@
-// ? BackendJS
-import { Class } from './Class.js';
-import { config as database } from "../../config/database.js";
-import { config as controllers } from "../../config/controllers.js";
-
 /**
- * * Config manage the server config.
+ * * Class controls the default classes.
  * @export
- * @class Config
- * @extends {Class}
+ * @class App
  * @author Juan Cruz Armentia <juancarmentia@gmail.com>
  */
-export class Config extends Class {
+export class Class {
     /**
-     * * Creates an instance of Config.
-     * @param {object} [properties] Config properties:
-     * @param {object} [states] Config states:
-     * @param {*} [data] Config data
-     * @memberof Config
+     * * Creates an instance of Class.
+     * @param {object} [properties] Class properties:
+     * @param {object} [states] Class states:
+     * @memberof Class
      */
     constructor (properties = {
         //
     }, states = {
         //
-    }, data = null) {
-        super(properties, states);
-        this.setData(data);
+    }) {
+        this.setProperties(properties);
+        this.setStates(states);
     }
 
     /**
-     * * Set the Config properties.
-     * @param {object} [properties] Config properties:
-     * @memberof Config
+     * * Set the Class properties.
+     * @param {object} [properties] Class properties:
+     * @memberof Class
      */
     setProperties (properties = {
         //
@@ -46,10 +39,10 @@ export class Config extends Class {
     }
 
     /**
-     * * Returns the Config properties or an specific property.
+     * * Returns the Class properties or an specific property.
      * @param {string} [name=''] Property name.
      * @returns {Object|*}
-     * @memberof Config
+     * @memberof Class
      */
     getProperties (name = '') {
         if (name && name != '') {
@@ -63,7 +56,7 @@ export class Config extends Class {
      * * Check if there is a property.
      * @param {string} name Property name.
      * @returns {Boolean}
-     * @memberof Config
+     * @memberof Class
      */
     hasProperty (name) {
         if (this.properties.hasOwnProperty(name)) {
@@ -77,9 +70,9 @@ export class Config extends Class {
      * * Change a property value.
      * @param {string} name Property name.
      * @param {*} value Property value.
-     * @memberof Config
+     * @memberof Class
      */
-    changeProperty (name , value) {
+    changeProperty (name, value) {
         if (this.hasProperty(name)) {
             this.properties[name] = value;
         }
@@ -90,21 +83,28 @@ export class Config extends Class {
     }
     
     /**
-     * * Set the Config states.
-     * @param {object} [states] Config states:
-     * @memberof Config
+     * * Set the Class states.
+     * @param {object} [states] Class states:
+     * @memberof Class
      */
     setStates (states = {
         //
     }) {
         this.states = {};
+        if (Object.entries(states)) {
+            for (const entry of Object.entries(states)) {
+                const key = entry[0];
+                const value = entry[1];
+                this.states[key] = value;
+            }
+        }
     }
 
     /**
-     * * Returns the Config states or an specific states.
+     * * Returns the Class states or an specific states.
      * @param {string} [name=''] States name.
      * @returns {Object|*}
-     * @memberof Config
+     * @memberof Class
      */
     getStates (name = '') {
         if (name && name != '') {
@@ -118,7 +118,7 @@ export class Config extends Class {
      * * Check if there is a status.
      * @param {string} name Status name.
      * @returns {Boolean}
-     * @memberof Config
+     * @memberof Class
      */
     hasStates (name) {
         if (this.states.hasOwnProperty(name)) {
@@ -132,7 +132,7 @@ export class Config extends Class {
      * * Change a status value.
      * @param {string} name Status name.
      * @param {*} value Status value.
-     * @memberof Config
+     * @memberof Class
      */
     changeStatus (name, value) {
         if (this.hasStates(name)) {
@@ -145,39 +145,37 @@ export class Config extends Class {
     }
 
     /**
-     * * Set the Config data.
-     * @param {*} [data=null]
-     * @memberof Config
+     * * Set the Class callback.
+     * @param {object} [callback] Class callback:
+     * @param {function} [callback.function] Class callback function.
+     * @param {object} [callback.params] Class callback function params.
+     * @memberof Class
      */
-    setData (data = null) {
-        this.data = ((data) ? data : null);
+    setCallback (callback = {
+        function: (params) => {
+            /* console.log(params) */
+        }, params: {
+            //
+    }}) {
+        this.callback = {
+            function: ((callback.hasOwnProperty('function')) ? callback.function : (params) => {
+                /* console.log(params) */
+            }), params: ((callback.hasOwnProperty('params')) ? callback.params : {
+                //
+        })};
     }
 
     /**
-     * * Returns the Config data.
-     * @returns {*}
-     * @memberof Config
+     * * Returns the Class callback.
+     * @param {string} [name=''] Callback data name.
+     * @returns {Object|*}
+     * @memberof Class
      */
-    getData () {
-        return this.data;
-    }
-
-    /**
-     * * Generates the App Config.
-     * @static
-     * @returns {object[Config]}
-     * @memberof Config
-     */
-    static generate () {
-        return {
-            'database': ((database) ? new this({
-                type: ((database.hasOwnProperty('type')) ? database.type : 'MongoDB'),
-                host: ((database.hasOwnProperty('host')) ? database.host : '127.0.0.1'),
-                port: ((database.hasOwnProperty('port')) ? database.port : 27017),
-                name: ((database.hasOwnProperty('name')) ? database.name : 'api'),
-                username: ((database.hasOwnProperty('username')) ? database.username : 'root'),
-                password: ((database.hasOwnProperty('password')) ? database.password : ''),
-            }) : false), 'controllers': ((controllers) ? new this({}, {}, controllers) : false),
-        };
+    getCallback (name = '') {
+        if (name && name != '') {
+            return this.callback[name];
+        } else {
+            return this.callback;
+        }
     }
 }
