@@ -28,7 +28,9 @@ export class Class {
     setProperties (properties = {
         //
     }) {
-        this.properties = {};
+        if (!this.properties) {
+            this.properties = {};
+        }
         if (Object.entries(properties)) {
             for (const entry of Object.entries(properties)) {
                 const key = entry[0];
@@ -90,7 +92,9 @@ export class Class {
     setStates (states = {
         //
     }) {
-        this.states = {};
+        if (!this.states) {
+            this.states = {};
+        }
         if (Object.entries(states)) {
             for (const entry of Object.entries(states)) {
                 const key = entry[0];

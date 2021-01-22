@@ -3,11 +3,13 @@ import { Class } from './Class.js';
 import { Config } from './Config.js';
 import { Connection } from './Database/MongoDB/Connection.js';
 import { Controller } from './Http/Controllers/Controller.js';
+import { Middleware } from './Http/Middlewares/Middleware.js';
 import { Route } from './Http/Route.js';
 
 // ? External
 import express from 'express';
 import bodyParser from 'body-parser';
+import morgan from 'morgan';
 
 /**
  * * App manage the server app.
@@ -32,6 +34,7 @@ export class App extends Class {
         this.setConfig();
         this.install();
         this.setControllers();
+        this.setMiddlewares();
         this.setRoutes();
         this.setDatabase();
     }
@@ -93,6 +96,8 @@ export class App extends Class {
      */
     install () {
         this.server = express();
+        this.server.set('port', process.env.PORT || 4000);
+        this.server.use(morgan('dev'));
         this.server.use(bodyParser.urlencoded({extended: false}));
         this.server.use(bodyParser.json());
         this.router = express.Router();
@@ -133,12 +138,28 @@ export class App extends Class {
     }
 
     /**
+     * * Set the App Middlewares.
+     * @memberof Database
+     */
+    setMiddlewares () {
+        this.middlewares = Middleware.generate(this);
+    }
+
+    /**
+     * * Returns the App Middlewares.
+     * @memberof App
+     */
+    getMiddlewares () {
+        return this.middlewares;
+    }
+
+    /**
      * * Set the App Routes.
      * @memberof Database
      */
     setRoutes () {
         this.routes = Route.generate(this);
-        this.getServer().use('/api', this.getRouter());
+        this.getServer().use('/', this.getRouter());
     }
 
     /**
@@ -190,7 +211,7 @@ export class App extends Class {
      * @memberof App
      */
     mount (params) {
-        params.app.getServer().listen(3900, () => {
+        params.app.getServer().listen(params.app.getServer().get('port'), () => {
             console.log('Server mounted :D');
         });
     }

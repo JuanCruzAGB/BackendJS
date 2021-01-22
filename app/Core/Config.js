@@ -1,7 +1,8 @@
 // ? BackendJS
 import { Class } from './Class.js';
-import { config as database } from "../../config/database.js";
 import { config as controllers } from "../../config/controllers.js";
+import { config as database } from "../../config/database.js";
+import { config as middlewares } from "../../config/middlewares.js";
 
 /**
  * * Config manage the server config.
@@ -178,6 +179,7 @@ export class Config extends Class {
                 username: ((database.hasOwnProperty('username')) ? database.username : 'root'),
                 password: ((database.hasOwnProperty('password')) ? database.password : ''),
             }) : false), 'controllers': ((controllers) ? new this({}, {}, controllers) : false),
+            'middlewares': ((middlewares) ? new this({}, {}, middlewares) : false),
         };
     }
 }

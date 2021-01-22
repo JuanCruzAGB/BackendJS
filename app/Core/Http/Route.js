@@ -17,19 +17,15 @@ export class Route extends Class {
      * * Creates an instance of Route.
      * @param {object} [properties] Route properties:
      * @param {string} [properties.name] Route name.
-     * @param {string} [properties.method] Route method.
-     * @param {string} [properties.url] Route URL.
      * @param {object} [states] Route states:
      * @param {string|function} [callback] Route callback.
      * @memberof Route
      */
     constructor (properties = {
         name: 'index',
-        method: 'GET',
-        url: '/',
     }, states = {
         //
-    }, callback = callback = {
+    }, callback = {
         function: (params) => {
             /* console.log(params) */
         }, params: {
@@ -46,16 +42,22 @@ export class Route extends Class {
      */
     prepare (app) {
         let callback, instance = this;
-        switch (typeof this.getCallback('function')) {
-            case 'function':
-                callback = this.getCallback('function');
-                break;
-            default:
-                let controller = Controller.find(app.getControllers(), Controller.getCallbackName(this.getCallback('function')));
-                callback = controller.getFunction(Controller.getCallbackFunction(this.getCallback('function')));
-                break;
+        if (this.hasProperty('get')) {
+            callback = Controller.find(app.getControllers(), instance.getProperties('get')[1]);
+            app.getRouter().get(instance.getProperties('get')[0], callback);
         }
-        app.getRouter()[this.getProperties('method').toLowerCase()](instance.getProperties('url'), callback);
+        if (this.hasProperty('post')) {
+            callback = Controller.find(app.getControllers(), instance.getProperties('post')[1]);
+            app.getRouter().post(instance.getProperties('post')[0], callback);
+        }
+        if (this.hasProperty('put')) {
+            callback = Controller.find(app.getControllers(), instance.getProperties('put')[1]);
+            app.getRouter().put(instance.getProperties('put')[0], callback);
+        }
+        if (this.hasProperty('delete')) {
+            callback = Controller.find(app.getControllers(), instance.getProperties('delete')[1]);
+            app.getRouter().delete(instance.getProperties('delete')[0], callback);
+        }
     }
 
     /**
@@ -68,7 +70,9 @@ export class Route extends Class {
     static generate (app) {
         let aux = [];
         for (const properties of routes) {
-            let route = new this(properties, {}, properties.callback);
+            let route = new this(properties, {}, ((properties.hasOwnProperty('callback')) ? properties.callback : {
+                function: false,
+            }));
             route.prepare(app);
             aux.push(route);
         }

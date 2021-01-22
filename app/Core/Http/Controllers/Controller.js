@@ -88,8 +88,8 @@ export class Controller extends Class {
      */
     static find (controllers, name) {
         for (const controller of controllers) {
-            if (controller.getProperties('name') == name) {
-                return controller;
+            if (controller.getProperties('name') == this.getCallbackName(name)) {
+                return controller.getClass()[this.getCallbackFunction(name)];
             }
         }
     }
