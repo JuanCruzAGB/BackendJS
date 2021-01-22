@@ -2,7 +2,7 @@
 /node_modules
 
 # custom local files
-/app/Http
-/app/Models
-/config
+# /app/Http
+# /app/Models
+# /config
 routes.js
