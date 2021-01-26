@@ -1,5 +1,5 @@
 // ? BackendJS
-import { config } from '../../../../config/controllers.js';
+import { config } from '../../../../config.js';
 
 /**
  * * Autoload controls the Middleware autoload.
@@ -17,9 +17,10 @@ export class Autoload {
      */
     static middlewares (name = '') {
         let properties;
-        for (const file of config) {
+        let defaultMiddlewares = ((config.hasOwnProperty('middlewares') ? config.middlewares : {}));
+        for (const file of defaultMiddlewares) {
             properties = file;
         }
-        return ((name) ? properties : config);
+        return ((name) ? properties : defaultMiddlewares);
     }
 }

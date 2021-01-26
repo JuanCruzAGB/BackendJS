@@ -1,5 +1,5 @@
 // ? BackendJS
-import { config } from '../../../../config/controllers.js';
+import { config } from '../../../../config.js';
 
 /**
  * * Autoload controls the Controller autoload.
@@ -17,9 +17,10 @@ export class Autoload {
      */
     static controllers (name = '') {
         let properties;
-        for (const file of config) {
+        let defaultControllers = ((config.hasOwnProperty('controllers') ? config.controllers : {}));
+        for (const file of defaultControllers) {
             properties = file;
         }
-        return ((name) ? properties : config);
+        return ((name) ? properties : defaultControllers);
     }
 }

@@ -28,7 +28,7 @@ export class User extends Model {
      * @memberof User
      */
     static fillable = [
-        'name', 'email', 'password', 'slug',
+        'username', 'email', 'password', 'slug',
     ];
 
     /**

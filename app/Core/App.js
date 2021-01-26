@@ -1,15 +1,17 @@
-// ? BackendJS
-import { Class } from './Class.js';
-import { Config } from './Config.js';
-import { Connection } from './Database/MongoDB/Connection.js';
-import { Controller } from './Http/Controllers/Controller.js';
-import { Middleware } from './Http/Middlewares/Middleware.js';
-import { Route } from './Http/Route.js';
-
-// ? External
+// ? External packages|repositories
 import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import path from 'path';
+
+// ? BackendJS
+import { Class } from './Class.js';
+import { Config } from './Config.js';
+import { Controller } from './Http/Controllers/Controller.js';
+import { Database } from "./Database/Database.js";
+import { Middleware } from './Http/Middlewares/Middleware.js';
+import { Route } from './Http/Route.js';
+import { routes } from '../../routes.js';
 
 /**
  * * App manage the server app.
@@ -37,6 +39,7 @@ export class App extends Class {
         this.setMiddlewares();
         this.setRoutes();
         this.setDatabase();
+        this.mount();
     }
 
     /**
@@ -95,11 +98,17 @@ export class App extends Class {
      * @memberof App
      */
     install () {
+        let instance = this;
         this.server = express();
         this.server.set('port', process.env.PORT || 4000);
         this.server.use(morgan('dev'));
         this.server.use(bodyParser.urlencoded({extended: false}));
         this.server.use(bodyParser.json());
+        this.server.use(express.static(path.join('public')));
+        this.getServer().use((request, response, next) => {
+            // response.locals.database = instance.getDatabase().connection;
+            next();
+        });
         this.router = express.Router();
     }
 
@@ -158,7 +167,7 @@ export class App extends Class {
      * @memberof Database
      */
     setRoutes () {
-        this.routes = Route.generate(this);
+        this.routes = Route.generate(this, routes);
         this.getServer().use('/', this.getRouter());
     }
 
@@ -171,30 +180,16 @@ export class App extends Class {
     }
 
     /**
-     * * Set the App database.
+     * * Set the App Database.
      * @memberof Database
      */
     setDatabase () {
         let instance = this;
-        this.database = ((this.hasConfig('database')) ? {
-            host: this.getConfig('database').host,
-            port: this.getConfig('database').port,
-            name: this.getConfig('database').name,
-            username: this.getConfig('database').username,
-            password: this.getConfig('database').password,
-        } : {
-            host: '127.0.0.1',
-            port: 27017,
-            name: 'api',
-            username: 'root',
-            password: '',
-        });
-        this.database.connection = Connection.generate(this.database.host, this.database.port, this.database.name);
-        this.database.connection.setCallback({
-            function: instance.mount,
-            params: {
-                app: instance,
-        }});
+        if (this.hasConfig('database')) {
+            this.database = new Database(this.getConfig('database').getProperties(), {
+                //
+            });
+        }
     }
 
     /**
@@ -207,12 +202,12 @@ export class App extends Class {
 
     /**
      * * Mount the App.
-     * @param {object} params
      * @memberof App
      */
-    mount (params) {
-        params.app.getServer().listen(params.app.getServer().get('port'), () => {
+    mount ( ) {
+        this.getServer().listen(this.getServer().get('port'), () => {
             console.log('Server mounted :D');
+            console.log(`- https://127.0.0.1:${ this.getServer().get('port') }`);
         });
     }
 }

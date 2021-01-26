@@ -15,34 +15,14 @@ export class Controller extends Class {
      * @param {object} [properties] Controller properties:
      * @param {string} [properties.name] Controller name.
      * @param {object} [states] Controller states:
-     * @param {object} [classObject=null] Controller class object.
      * @memberof Controller
      */
     constructor (properties = {
         name: null,
     }, states = {
         //
-    }, classObject = null) {
+    }) {
         super(properties, states);
-        this.setClass(classObject);
-    }
-
-    /**
-     * * Set the Controller class object.
-     * @param {object} [classObject=null] Controller class object.
-     * @memberof Controller
-     */
-    setClass (classObject = null) {
-        this.class = ((classObject) ? classObject : null)
-    }
-
-    /**
-     * * Returns the Controller class object
-     * @returns {object}
-     * @memberof Controller
-     */
-    getClass () {
-        return this.class;
     }
 
     /**
@@ -105,7 +85,9 @@ export class Controller extends Class {
         let aux = [];
         for (const properties of app.getConfig('controllers').getData()) {
             let controller = Autoload.controllers(properties.name);
-            controller = new this(this.generateProperties(controller), {}, properties.class);
+            controller = new properties.class(this.generateProperties(controller), {
+                // ? Controller states
+            });
             aux.push(controller);
         }
         return aux;

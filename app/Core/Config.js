@@ -1,8 +1,6 @@
 // ? BackendJS
 import { Class } from './Class.js';
-import { config as controllers } from "../../config/controllers.js";
-import { config as database } from "../../config/database.js";
-import { config as middlewares } from "../../config/middlewares.js";
+import { config } from "../../config.js";
 
 /**
  * * Config manage the server config.
@@ -166,20 +164,49 @@ export class Config extends Class {
     /**
      * * Generates the App Config.
      * @static
+     * @param {string} [name=''] Config name.
      * @returns {object[Config]}
      * @memberof Config
      */
-    static generate () {
-        return {
-            'database': ((database) ? new this({
-                type: ((database.hasOwnProperty('type')) ? database.type : 'MongoDB'),
-                host: ((database.hasOwnProperty('host')) ? database.host : '127.0.0.1'),
-                port: ((database.hasOwnProperty('port')) ? database.port : 27017),
-                name: ((database.hasOwnProperty('name')) ? database.name : 'api'),
-                username: ((database.hasOwnProperty('username')) ? database.username : 'root'),
-                password: ((database.hasOwnProperty('password')) ? database.password : ''),
-            }) : false), 'controllers': ((controllers) ? new this({}, {}, controllers) : false),
-            'middlewares': ((middlewares) ? new this({}, {}, middlewares) : false),
-        };
+    static generate (name = '') {
+        let aux = {};
+        if (name != '') {
+            for (const key in config) {
+                if (Object.hasOwnProperty.call(config, key) && name == key) {
+                    return this.parseConfigData(key, config[key]);
+                }
+            }
+        } else {
+            for (const key in config) {
+                if (Object.hasOwnProperty.call(config, key)) {
+                    aux[key] = this.parseConfigData(key, config[key]);
+                }
+            }
+            return aux;
+        }
+    }
+
+    /**
+     * * Returns the parsed data based on the Config name.
+     * @static
+     * @param {string} name Config name.
+     * @param {*} data Config data.
+     * @returns {Config}
+     * @memberof Config
+     */
+    static parseConfigData (name, data) {
+        switch (name) {
+            case 'database':
+                return new this({
+                    type: ((data.hasOwnProperty('type')) ? data.type : 'MongoDB'),
+                    host: ((data.hasOwnProperty('host')) ? data.host : '127.0.0.1'),
+                    port: ((data.hasOwnProperty('port')) ? data.port : 27017),
+                    name: ((data.hasOwnProperty('name')) ? data.name : 'api'),
+                    username: ((data.hasOwnProperty('username')) ? data.username : 'root'),
+                    password: ((data.hasOwnProperty('password')) ? data.password : ''),
+                });
+            default :
+                return new this({}, {}, data);
+        }
     }
 }

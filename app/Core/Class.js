@@ -12,9 +12,9 @@ export class Class {
      * @memberof Class
      */
     constructor (properties = {
-        //
+        // ? Properties
     }, states = {
-        //
+        // ? States
     }) {
         this.setProperties(properties);
         this.setStates(states);
@@ -26,7 +26,7 @@ export class Class {
      * @memberof Class
      */
     setProperties (properties = {
-        //
+        // ? Properties
     }) {
         if (!this.properties) {
             this.properties = {};
@@ -90,7 +90,7 @@ export class Class {
      * @memberof Class
      */
     setStates (states = {
-        //
+        // ? States
     }) {
         if (!this.states) {
             this.states = {};
@@ -159,7 +159,7 @@ export class Class {
         function: (params) => {
             /* console.log(params) */
         }, params: {
-            //
+            // ? Params
     }}) {
         this.callback = {
             function: ((callback.hasOwnProperty('function')) ? callback.function : (params) => {
@@ -181,5 +181,47 @@ export class Class {
         } else {
             return this.callback;
         }
+    }
+
+    /**
+     * * Change the Class callback function params.
+     * @param {*} [params={}] Class callback function params.
+     * @memberof Class
+     */
+    changeCallbackParams (params = {
+        // ? Params
+    }) {
+        this.callback.params = ((params) ? params : {
+            // ? Params
+        });
+    }
+
+    /**
+     * * Executes the Class callback function.
+     * @param {object} params Optional callback params.
+     * @memberof Class
+     */
+    execute (params = {
+        // ? Params
+    }) {
+        this.getCallback('function')({ ...this.getCallback('params'), ...params});
+    }
+
+    /**
+     * * Set Class data.
+     * @param {*} [data=null] Class data.
+     * @memberof Class
+     */
+    setData (data = null) {
+        this.data = data;
+    }
+
+    /**
+     * * Returns the Class data.
+     * @returns {*}
+     * @memberof Class
+     */
+    getData () {
+        return this.data;
     }
 }
